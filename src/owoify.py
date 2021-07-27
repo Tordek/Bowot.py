@@ -45,7 +45,7 @@ def owoify(text):
     text = re.sub(r'u',
                   lambda _: r'uwu' if random.random() < OWO_CHANCE else 'u', text)
     text = re.sub(r'([eo][r](s?))\b',
-                  lambda match: random.choice(['ah' + match[2], 'uh' + match[2], match[1]]), text)
+                  lambda match: random.choice(['ah' + match.group(2), 'uh' + match.group(2), match.group(1)]), text)
     text = re.sub(r'\blmao\b', r'lmeow', text)
     text = re.sub(r'l|r', r'w', text)
     text = re.sub(r'L|R', r'W', text)
