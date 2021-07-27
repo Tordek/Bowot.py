@@ -33,6 +33,10 @@ class Bowot(discord.Client):
         else:
             input_text = message.content[5:]
 
+        if input_text is None:
+            await message.reply("OwOh nyo! sumfin's bwoken...")
+            return
+
         reply = owoify(input_text)
 
         if len(reply) > 1900:
