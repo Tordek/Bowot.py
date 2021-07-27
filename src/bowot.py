@@ -12,11 +12,11 @@ class Bowot(discord.Client):
         self.permissions = permissions
 
     def invite_link(self):
-        return f"https://discord.com/api/oauth2/authorize?client_id={self.id}&permissions={self.permissions}&scope=bot"
+        return "https://discord.com/api/oauth2/authorize?client_id={0}&permissions={1}&scope=bot".format(self.id, self.permissions)
 
     async def on_ready(self):
-        logger.info(f"Started running Bowot as {self.user}")
-        logger.info(f"Invite to server using {self.invite_link()}")
+        logger.info("Started running Bowot as {0}".format(self.user))
+        logger.info("Invite to server using {0}".format(self.invite_link()))
 
     async def on_message(self, message):
         if not message.content.startswith("!owo"):
