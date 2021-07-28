@@ -39,7 +39,6 @@ def kaomoji(mood):
 
 
 def owoify(text):
-    text = re.sub(r'@!', r'@¡', text)  # Escape Discord tags
     text = re.sub(r'o',
                   lambda _: r'owo' if random.random() < OWO_CHANCE else 'o', text)
     text = re.sub(r'u',
@@ -60,8 +59,8 @@ def owoify(text):
     text = re.sub(r'([Nn])([aou])', r'\1y\2', text)
     text = re.sub(r'N([AOU])', r'NY\1', text)
     text = re.sub(r'ove', r'uv', text)
-    text = re.sub(r'!+|(?<!\w):\)(?!\w)', kaomoji('happy'), text)
+    # Negative lookbehind to avoid matching @! for Discord tags
+    text = re.sub(r'(?<!@)!+|(?<!\w):\)(?!\w)', kaomoji('happy'), text)
     text = re.sub(r"\bD:(?!\w)|:'?\(", kaomoji('sad'), text)
-    text = re.sub(r'@¡', r"@!", text)  # Unescape Discord tags
 
     return text
