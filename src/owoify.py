@@ -1,5 +1,5 @@
 import re
-import random
+from random import random, choice
 
 OWO_CHANCE = 0.03
 KAOMOJI = {
@@ -33,7 +33,7 @@ KAOMOJI = {
 
 def kaomoji(mood):
     def inner(_):
-        return random.choice(KAOMOJI[mood])
+        return choice(KAOMOJI[mood])
 
     return inner
 
@@ -46,15 +46,15 @@ def matchcase(replacement):
             return replacement.title()
 
         chance = len([c for c in word if c.isupper()]) / len(word)
-        return ''.join(c.upper() if random.random() < chance else c for c in replacement)
+        return ''.join(c.upper() if random() < chance else c for c in replacement)
     return inner
 
 
 def owoify(text):
     text = re.sub(r'o',
-                  lambda _: r'owo' if random.random() < OWO_CHANCE else 'o', text)
+                  lambda _: r'owo' if random() < OWO_CHANCE else 'o', text)
     text = re.sub(r'u',
-                  lambda _: r'uwu' if random.random() < OWO_CHANCE else 'u', text)
+                  lambda _: r'uwu' if random() < OWO_CHANCE else 'u', text)
     text = re.sub(r'([eo][r](s?))\b',
                   lambda match: random.choice(['ah' + match.group(2), 'uh' + match.group(2), match.group(1)]), text)
     text = re.sub(r'\blmao\b', r'lmeow', text)
@@ -68,6 +68,7 @@ def owoify(text):
     text = re.sub(r'\bone\b', matchcase(r'wun'), text, flags=re.IGNORECASE)
     text = re.sub(r'\bones\b', matchcase(r'wuns'), text, flags=re.IGNORECASE)
     text = re.sub(r'\bgive\b', matchcase(r'gib'), text, flags=re.IGNORECASE)
+    text = re.sub(r'\bnot\b', matchcase(r'knot') if random() < 0.5 else matchcase(r'not'), text, flags=re.IGNORECASE)
     text = re.sub(r'ttl', matchcase(r'ddl'), text, flags=re.IGNORECASE)
     text = re.sub(r'tion', matchcase(r'shun'), text, flags=re.IGNORECASE)
     text = re.sub(r'ome', matchcase(r'um'), text, flags=re.IGNORECASE)
