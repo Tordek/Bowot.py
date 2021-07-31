@@ -58,8 +58,8 @@ def owoify(text):
     text = re.sub(r'([eo][r](s?))\b',
                   lambda match: random.choice(['ah' + match.group(2), 'uh' + match.group(2), match.group(1)]), text)
     text = re.sub(r'\blmao\b', r'lmeow', text)
-    text = re.sub(r'l|r', r'w', text, flags=re.IGNORECASE)
-    text = re.sub(r'L|R', r'W', text, flags=re.IGNORECASE)    
+    text = re.sub(r'l|r', r'w', text)
+    text = re.sub(r'L|R', r'W', text)
     text = re.sub(r'\bcum\b', matchcase(r'cummies'), text, flags=re.IGNORECASE)
     text = re.sub(r'\bthe\b', matchcase(r'da'), text, flags=re.IGNORECASE)
     text = re.sub(r'\bwith\b', matchcase(r'wif'), text, flags=re.IGNORECASE)    
