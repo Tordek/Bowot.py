@@ -50,29 +50,46 @@ def matchcase(replacement):
     return inner
 
 
+def chance(p, option1, option2):
+    def inner(_):
+        if random() < p:
+            return option1
+        return option2
+    return inner
+
+
+def fchance(p, option1, option2):
+    def inner(match):
+        if random() < p:
+            return option1(match)
+        return option2(match)
+    return inner
+
+
 def owoify(text):
-    text = re.sub(r'o',
-                  lambda _: r'owo' if random() < OWO_CHANCE else 'o', text)
-    text = re.sub(r'u',
-                  lambda _: r'uwu' if random() < OWO_CHANCE else 'u', text)
+    text = re.sub(r'o', chance(OWO_CHANCE, 'owo', 'o'), text)
+    text = re.sub(r'u', chance(OWO_CHANCE, 'uwu', 'u'), text)
     text = re.sub(r'([eo][r](s?))\b',
-                  lambda match: random.choice(['ah' + match.group(2), 'uh' + match.group(2), match.group(1)]), text)
+                  lambda match: choice(['ah' + match.group(2), 'uh' + match.group(2), match.group(1)]), text)
     text = re.sub(r'\blmao\b', r'lmeow', text)
     text = re.sub(r'l|r', r'w', text)
     text = re.sub(r'L|R', r'W', text)
-    text = re.sub(r'([Nn])([aou])', r'\1y\2', text)
-    text = re.sub(r'N([AOU])', r'NY\1', text)
     text = re.sub(r'\bcum\b', matchcase(r'cummies'), text, flags=re.IGNORECASE)
     text = re.sub(r'\bthe\b', matchcase(r'da'), text, flags=re.IGNORECASE)
-    text = re.sub(r'\bwith\b', matchcase(r'wif'), text, flags=re.IGNORECASE)    
+    text = re.sub(r'\bwith\b', matchcase(r'wif'), text, flags=re.IGNORECASE)
     text = re.sub(r'\bone\b', matchcase(r'wun'), text, flags=re.IGNORECASE)
     text = re.sub(r'\bones\b', matchcase(r'wuns'), text, flags=re.IGNORECASE)
     text = re.sub(r'\bgive\b', matchcase(r'gib'), text, flags=re.IGNORECASE)
-    text = re.sub(r'\bnot\b', matchcase(r'knot') if random() < 0.5 else matchcase(r'not'), text, flags=re.IGNORECASE)
+    text = re.sub(r'\bnot\b', fchance(0.5, matchcase(r'knot'),
+                  matchcase(r'not')), text, flags=re.IGNORECASE)
     text = re.sub(r'ttl', matchcase(r'ddl'), text, flags=re.IGNORECASE)
     text = re.sub(r'tion', matchcase(r'shun'), text, flags=re.IGNORECASE)
     text = re.sub(r'ome', matchcase(r'um'), text, flags=re.IGNORECASE)
     text = re.sub(r'ove', matchcase(r'uv'), text, flags=re.IGNORECASE)
+    text = re.sub(r'N([AOU])', lambda match: chance(
+        0.1, r'NY' + match.group(1), match.group(0))(None), text)
+    text = re.sub(r'([Nn])([aou])', lambda match: chance(
+        0.1, match.group(1) + r'y' + match.group(2), match.group(0))(None), text)
     # Negative lookbehind to avoid matching @! for Discord tags
     text = re.sub(r'(?<!@)!+|(?<!\w):\)(?!\w)', kaomoji('happy'), text)
     text = re.sub(r"\bD:(?!\w)|:'?\(", kaomoji('sad'), text)
