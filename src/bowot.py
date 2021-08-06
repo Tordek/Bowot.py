@@ -22,21 +22,16 @@ class Bowot(discord.Client):
         if not message.content.startswith("!owo"):
             return
 
-        input_text = None
+        input_text = message.content[5:].strip()
 
-        if message.reference and message.reference.resolved is not None:
-            input_text = message.reference.resolved.content
-        elif len(message.content[5:].strip()) == 0:
-            messages = await message.channel.history(limit=1, before=message).flatten()
-            if len(messages) == 1:
-                input_text = messages[0].content
-        else:
-            input_text = message.content[5:]
-
-        if input_text is None:
-            await message.reply("OwOh nyo! sumfin's bwoken...")
-            return
-
+        if len(input_text) == 0:
+            if message.reference and message.reference.resolved is not None:
+                input_text = message.reference.resolved.content
+            else:
+                messages = await message.channel.history(limit=1, before=message).flatten()
+                if len(messages) == 1:
+                    input_text = messages[0].content
+        
         reply = owoify(input_text)
 
         if len(reply) > 1900:
